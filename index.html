@@ -29,9 +29,6 @@ svg .sk{filter:url(#sketch)}
 .u::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:5px;background-repeat:repeat-x}
 .u-purple::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%238a79b8' fill='none' stroke-width='1.6'/%3E%3C/svg%3E")}
 .u-pink::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%23d98aa0' fill='none' stroke-width='1.6'/%3E%3C/svg%3E")}
-.u-green::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%237e8f5c' fill='none' stroke-width='1.6'/%3E%3C/svg%3E")}
-.u-coral::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%23dd8a58' fill='none' stroke-width='1.6'/%3E%3C/svg%3E")}
-.u-ink::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%2320241a' fill='none' stroke-width='1.4'/%3E%3C/svg%3E")}
 /* underline sweep-in */
 html.js .u::after{transform:scaleX(0);transform-origin:0 50%;transition:transform .7s cubic-bezier(.6,0,.3,1) .2s}
 html.js .u.inview::after{transform:scaleX(1)}
@@ -257,10 +254,9 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
   <div class="hero-left">
     <span class="eyebrow">A memory-centered cognitive architecture</span>
     <h1>Intelligence should<br><span class="fwd u u-purple">remember forward.</span></h1>
-    <p class="lede">Chamelia is built to perceive a situation, retrieve what matters, imagine what different actions could lead to, decide, and learn from what actually happens&mdash;<span class="u u-green">over and over.</span></p>
+    <p class="lede">Chamelia remembers what happened, considers what different actions might lead to, and learns from the outcome.</p>
     <div class="cta-row">
-      <a class="pill" href="#architecture">explore the architecture <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path class="sk" d="M4 12h15M13 6l7 6-7 6"/></svg></a>
-      <a class="link-sm u u-purple" href="#origin">why it began &#8594;</a>
+      <a class="pill" href="#architecture">see the architecture <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path class="sk" d="M4 12h15M13 6l7 6-7 6"/></svg></a>
     </div>
   </div>
 
@@ -359,7 +355,7 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
 
     <div class="io outputs">
       <span class="lbl">outputs</span>
-      <ul class="outs"><li>insights</li><li>predictions</li><li>decisions</li><li>actions</li><li><span class="u u-green">better outcomes</span></li></ul>
+      <ul class="outs"><li>insights</li><li>predictions</li><li>decisions</li><li>actions</li><li>better outcomes</li></ul>
     </div>
   </div>
 </section>
@@ -371,49 +367,49 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
 <section class="section-intro">
   <div>
     <span class="micro">Eight parts, one recursive system</span>
-    <h2>Built more like a mind<br>than a <span class="u u-purple">model endpoint.</span></h2>
+    <h2>Built more like a mind<br>than a model endpoint.</h2>
   </div>
 </section>
 <section class="modules">
   <a class="mod module-link" href="module.html?module=perception" aria-label="Open the Perception module page">
     <div class="ico"><img src="icons/v5/perception-eye.png?v=1" alt="A complete hand-drawn eye representing perception"></div>
-    <h3 class="u u-purple">Perception</h3>
+    <h3>Perception</h3>
     <p>Turns messy observations into a compact state at several scales, without needing labels for what matters.</p>
   </a>
   <a class="mod module-link" href="module.html?module=memory" aria-label="Open the Unified Memory module page">
     <div class="ico"><img src="icons/v4/memory.png?v=1" alt="A complete hand-drawn Chamelia creature tending a swirl of memory"></div>
-    <h3 class="u u-pink">Unified Memory</h3>
-    <p>Keeps episodes, beliefs, testimony, and reusable skills&mdash;then retrieves what today makes relevant. <span class="heart">&#9825;</span></p>
+    <h3>Unified Memory</h3>
+    <p>Keeps episodes, beliefs, testimony, and reusable skills&mdash;then retrieves what today makes relevant.</p>
   </a>
   <a class="mod module-link" href="module.html?module=configurator" aria-label="Open the Configurator module page">
     <div class="ico"><img src="icons/v4/configurator.png?v=1" alt="A complete hand-drawn Chamelia creature arranging context for the configurator"></div>
-    <h3 class="u u-green">Configurator</h3>
+    <h3>Configurator</h3>
     <p>Blends perception, memory, thought, beliefs, and outside knowledge into one small working brief.</p>
   </a>
   <a class="mod module-link" href="module.html?module=actor" aria-label="Open the Actor module page">
     <div class="ico"><img src="icons/v4/actor.png?v=1" alt="A complete hand-drawn Chamelia creature proposing actions"></div>
-    <h3 class="u u-green">Actor</h3>
-    <p>Proposes a few plausible actions&mdash;fast when it can, deliberate when the stakes ask for more. <span class="heart">&#10022;</span></p>
+    <h3>Actor</h3>
+    <p>Proposes a few plausible actions&mdash;fast when it can, deliberate when the stakes ask for more.</p>
   </a>
   <a class="mod module-link" href="module.html?module=world-model" aria-label="Open the World Model module page">
     <div class="ico"><img src="icons/v3/worldmodel.png?v=1" alt="A hand-drawn Chamelia creature imagining a branching world"></div>
-    <h3 class="u u-purple">World Model</h3>
+    <h3>World Model</h3>
     <p>Imagines the futures those actions could create before anything touches the real world.</p>
   </a>
   <a class="mod module-link mod-cost" href="module.html?module=cost" aria-label="Open the Cost module page">
     <div class="ico"><img src="icons/v3/cost.png?v=1" alt="A hand-drawn Chamelia creature weighing possible costs"></div>
-    <h3 class="u u-coral">Cost</h3>
+    <h3>Cost</h3>
     <p>Scores each path with explicit rules and learned judgment, keeping priorities inspectable.</p>
   </a>
   <a class="mod module-link" href="module.html?module=sleep" aria-label="Open the Sleep module page">
     <div class="ico"><img src="icons/v3/sleep.png?v=1" alt="A hand-drawn Chamelia creature sleeping on a crescent moon"></div>
-    <h3 class="u u-purple">Sleep</h3>
-    <p>Turns experience into memory: compressing what worked, learning from regret, and promoting useful skills. <span class="heart">&#10022;</span></p>
+    <h3>Sleep</h3>
+    <p>Turns experience into memory: compressing what worked, learning from regret, and promoting useful skills.</p>
   </a>
   <a class="mod module-link" href="module.html?module=metacognition" aria-label="Open the Metacognition module page">
     <div class="ico"><img src="icons/v3/controller.png?v=1" alt="A hand-drawn Chamelia creature inspecting its own cognition"></div>
-    <h3 class="u u-purple">Metacognition</h3>
-    <p>Adapts attention, search, and compute to the task and the resources available. <span class="heart">&#9825;</span></p>
+    <h3>Metacognition</h3>
+    <p>Adapts attention, search, and compute to the task and the resources available.</p>
   </a>
 </section>
 
@@ -459,7 +455,7 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
 
 <section class="research" id="research">
   <div class="research-head">
-    <div><span class="micro">The working research stack</span><h2>What is actually<br><span class="u u-green">inside the loop.</span></h2></div>
+    <div><span class="micro">The working research stack</span><h2>What is actually<br>inside the loop.</h2></div>
   </div>
   <div class="research-list">
     <article class="research-row"><h3>Perception / JEPA</h3><p>Perception is built around <strong>H-JEPA</strong>, drawing on Yann LeCun&rsquo;s joint-embedding predictive work. It learns compact representations from context at several scales without wasting effort reconstructing every raw observation. The <strong>VICReg</strong> objective helps keep those representations varied instead of collapsing into the same answer.</p></article>
