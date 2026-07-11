@@ -1,0 +1,503 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chamelia — A memory-centered cognitive architecture</title>
+<meta name="description" content="Chamelia perceives, remembers, imagines, decides, and learns from what happens next — an adaptive cognitive architecture built to remember forward.">
+<link rel="icon" href="assets/mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&amp;family=Caveat:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#929c85; --bg2:#8b9680; --ink:#20241a; --ink2:#3f4433; --ink3:#5f6450;
+  --navy:#1d2740; --purple:#8a79b8; --purple-ink:#6a5aa0; --lav:#cbbadd; --note:#c9b6dd;
+  --coral:#dd8a58; --pink:#d98aa0; --green:#7e8f5c; --cream:#ece2c8;
+  --f-head:"Fraunces",serif; --f-hand:"Caveat",cursive; --f-mono:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-snap-type:y proximity;scroll-behavior:smooth;scroll-padding-top:24px;overflow-x:clip}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--f-mono); font-size:15px;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden; position:relative}
+body::before{content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E")}
+a{color:inherit;text-decoration:none}
+svg .sk{filter:url(#sketch)}
+.hand{font-family:var(--f-hand)}
+.page{min-height:100vh;scroll-snap-align:start;position:relative;z-index:2;display:flex;flex-direction:column}
+.page#top{padding-top:0}
+
+/* wobbly underlines */
+.u{position:relative;white-space:nowrap}
+.u::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:5px;background-repeat:repeat-x}
+.u-purple::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%238a79b8' fill='none' stroke-width='1.6'/%3E%3C/svg%3E")}
+.u-pink::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%23d98aa0' fill='none' stroke-width='1.6'/%3E%3C/svg%3E")}
+.u-green::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%237e8f5c' fill='none' stroke-width='1.6'/%3E%3C/svg%3E")}
+.u-coral::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%23dd8a58' fill='none' stroke-width='1.6'/%3E%3C/svg%3E")}
+.u-ink::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='5'%3E%3Cpath d='M1 3 Q20 0 40 2.5 T79 2.5' stroke='%2320241a' fill='none' stroke-width='1.4'/%3E%3C/svg%3E")}
+/* underline sweep-in */
+html.js .u::after{transform:scaleX(0);transform-origin:0 50%;transition:transform .7s cubic-bezier(.6,0,.3,1) .2s}
+html.js .u.inview::after{transform:scaleX(1)}
+
+/* NAV */
+nav{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:17px 46px;flex:0 0 auto}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:32px;transform:rotate(-4deg);mix-blend-mode:multiply}
+.brand b{font-family:var(--f-hand);font-weight:700;font-size:30px;color:var(--ink)}
+.nav-links{display:flex;gap:28px;font-family:var(--f-mono);font-size:14px}
+.nav-links a{opacity:.85}.nav-links a:hover{color:var(--purple-ink)}
+.pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-weight:500;font-size:14px;padding:11px 20px;color:#eef0e2;background:var(--ink);border-radius:24px}
+.pill svg{width:14px;height:14px}
+
+/* HERO */
+.hero{flex:1 1 auto;display:grid;grid-template-columns:minmax(330px,390px) minmax(0,1fr);align-items:center;gap:24px;padding:0 36px 0 76px;min-height:0}
+.hero-left{min-width:0;position:relative;z-index:3}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--purple-ink)}
+h1{font-family:var(--f-head);font-weight:500;font-size:clamp(44px,4.4vw,68px);line-height:1.02;margin:16px 0 0;color:var(--ink);letter-spacing:-.01em}
+h1 .fwd{font-family:var(--f-hand);font-weight:600;color:var(--purple);font-size:1.12em}
+.lede{font-family:var(--f-mono);font-size:14px;line-height:1.75;color:var(--ink2);max-width:430px;margin:24px 0 0}
+.cta-row{display:flex;align-items:center;gap:22px;margin-top:28px;flex-wrap:wrap}
+.link-sm{font-family:var(--f-mono);font-size:13px;display:inline-flex;align-items:center;gap:7px}
+
+/* diagram */
+.diagram{display:grid;grid-template-columns:160px minmax(280px,360px) 170px;column-gap:28px;align-items:center;justify-content:center;min-width:0;overflow:hidden;position:relative}
+.io{display:flex;flex-direction:column;gap:12px;flex:0 0 auto}
+.arrows{flex:0 0 auto;width:68px;height:auto;margin-right:-12px}
+.inputs{grid-column:1;grid-row:1;position:relative;z-index:2;align-self:stretch;display:block}
+.outputs{grid-column:3;grid-row:1;position:relative;z-index:2;align-self:stretch;display:block}
+.inputs .lbl{position:absolute;right:4px;top:20%;transform:translateY(-50%);text-align:right}
+.outputs .lbl{position:absolute;left:0;right:0;top:31%;transform:translateY(-50%);text-align:center}
+.outputs::before{content:"\21DD";position:absolute;left:-24px;top:31%;font-family:var(--f-hand);font-size:42px;line-height:1;color:var(--purple-ink);transform:translateY(-50%) rotate(-7deg);transform-origin:center}
+.io .lbl{font-family:var(--f-hand);font-size:25px;color:var(--ink);margin-bottom:2px}
+.box{font-family:var(--f-mono);font-size:12.5px;border:1.4px solid var(--ink);border-radius:8px;padding:8px 12px;background:rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;color:var(--ink)}
+.box svg{width:16px;height:16px}
+html.js .box{opacity:0;transform:translateX(-16px);transition:opacity .6s ease,transform .6s ease}
+html.js .box.inview{opacity:1;transform:none}
+.inputs .box{position:absolute;left:0;width:100%;box-sizing:border-box;padding:5px 10px;transform:translateY(-50%)}
+.inputs .box:nth-of-type(1){top:28.8%;left:0}
+.inputs .box:nth-of-type(2){top:36.2%;left:10px}
+.inputs .box:nth-of-type(3){top:43.7%;left:-4px}
+.inputs .box:nth-of-type(4){top:51.2%;left:7px}
+.inputs .box:nth-of-type(5){top:59%;left:16px}
+html.js .inputs .box{transform:translate(-16px,-50%)}
+html.js .inputs .box.inview{transform:translate(0,-50%)}
+.inputs .box:nth-of-type(2){transition-delay:.08s}
+.inputs .box:nth-of-type(3){transition-delay:.16s}
+.inputs .box:nth-of-type(4){transition-delay:.24s}
+.inputs .box:nth-of-type(5){transition-delay:.32s}
+.outs{list-style:none;position:absolute;top:36%;left:50%;display:flex;flex-direction:column;gap:10px;transform:translateX(-50%);width:max-content;margin:0;padding:0;font-family:var(--f-mono);font-size:12.5px;line-height:2.0}
+.outs li{display:flex;align-items:center;gap:8px;min-width:148px;border:1.35px solid var(--ink);border-radius:8px;padding:7px 10px;background:rgba(255,255,255,.055);line-height:1.35;translate:0 0;animation:output-float 5.8s ease-in-out infinite}
+.outs li::before{display:none}
+.outs li:nth-child(1){margin-left:3px}
+.outs li:nth-child(2){margin-left:15px;animation-delay:-1.3s}
+.outs li:nth-child(3){margin-left:7px;animation-delay:-2.7s}
+.outs li:nth-child(4){margin-left:18px;animation-delay:-.6s}
+.outs li:nth-child(5){margin-left:11px;animation-delay:-3.8s}
+@keyframes output-float{0%,100%{translate:0 0}50%{translate:0 -4px}}
+html.js .outs li{opacity:0;transform:translateY(8px);transition:opacity .55s ease,transform .55s ease}
+html.js .outputs.inview .outs li{opacity:1;transform:none}
+.outputs.inview .outs li:nth-child(1){transition-delay:.1s}
+.outputs.inview .outs li:nth-child(2){transition-delay:.2s}
+.outputs.inview .outs li:nth-child(3){transition-delay:.3s}
+.outputs.inview .outs li:nth-child(4){transition-delay:.4s}
+.outputs.inview .outs li:nth-child(5){transition-delay:.5s}
+/* dashed arrows draw toward the head */
+html.js .arrows{clip-path:inset(-15% 100% -15% 0)}
+html.js .arrows.inview{clip-path:inset(-15% -5% -15% 0);transition:clip-path 1.3s ease .4s}
+/* pieces that float inside the head svg */
+.head-svg{flex:0 0 auto;width:clamp(300px,27vw,420px);height:auto}
+.head-svg .floaty{transform-box:fill-box;transform-origin:center;animation:floaty 6s ease-in-out infinite}
+.head-svg .floaty.f2{animation-duration:7.5s;animation-delay:-2.4s}
+.head-svg .floaty.f3{animation-duration:5.2s;animation-delay:-1.2s}
+.head-svg .floaty.f4{animation-duration:8.4s;animation-delay:-4s}
+.arrows[hidden],.head-svg[hidden]{display:none!important}
+.head-art-wrap{grid-column:2;grid-row:1;width:100%;min-width:0;margin:0;position:relative;z-index:1;pointer-events:none;transform:none}
+.head-art{display:block;width:100%;height:auto;animation:head-breathe 7.5s ease-in-out infinite;mix-blend-mode:multiply}
+@keyframes head-breathe{0%,100%{transform:translateY(0) rotate(-.2deg)}50%{transform:translateY(-5px) rotate(.2deg)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* feature strip */
+.strip{margin:0 46px 30px;border:1.5px solid var(--ink);border-radius:16px;padding:16px 26px;display:flex;align-items:center;gap:22px;flex:0 0 auto}
+.strip .label{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;line-height:1.5;text-transform:uppercase;color:var(--purple-ink);flex:0 0 auto}
+.strip .feats{display:flex;align-items:center;gap:12px;flex:1;justify-content:space-around;flex-wrap:wrap}
+.feat{display:flex;align-items:center;gap:9px;font-family:var(--f-hand);font-size:20px}
+.feat svg{width:24px;height:24px}
+.arr{color:var(--ink3);display:inline-block;animation:drift 3s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+
+/* module grid */
+.modules{padding:72px 46px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:44px 30px}
+.mod{display:flex;flex-direction:column;color:inherit;cursor:pointer;border-radius:18px;padding:4px;margin:-4px;transition:background .25s ease,transform .25s ease}
+.mod:hover{background:rgba(236,226,200,.08);transform:translateY(-2px)}
+.mod:focus-visible{outline:1.5px dashed var(--purple-ink);outline-offset:7px}
+.mod .ico{height:190px;width:100%;display:flex;align-items:center;justify-content:center;animation:floaty 6s ease-in-out infinite;position:relative}
+.mod:nth-child(2n) .ico{animation-duration:7.2s;animation-delay:-3s}
+.mod:nth-child(3n) .ico{animation-duration:5.4s;animation-delay:-1.6s}
+.mod .ico img{width:100%;height:100%;max-width:240px;object-fit:contain;object-position:center}
+.mod-cost .ico img{transform:translateX(-9%)}
+.mod:hover .ico,.mod:focus-visible .ico,.mod:active .ico{animation:press-wobble .74s cubic-bezier(.36,.07,.19,.97)!important;will-change:transform}
+@keyframes press-wobble{0%,100%{transform:rotate(0) scale(1)}16%{transform:rotate(-10deg) scale(.92)}34%{transform:rotate(9deg) scale(1.08)}52%{transform:rotate(-7deg) scale(.97)}70%{transform:rotate(5deg) scale(1.04)}86%{transform:rotate(-2deg) scale(1)}}
+.mod h3{font-family:var(--f-mono);font-weight:500;font-size:14px;letter-spacing:.12em;text-transform:uppercase;margin:16px 0 10px;color:var(--ink);display:inline-block;align-self:flex-start}
+.mod p{font-family:var(--f-hand);font-size:20px;line-height:1.35;color:var(--ink2);margin:0;max-width:240px}
+.mod .heart{color:var(--pink)}
+html.js .mod{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+html.js .mod.inview{opacity:1;transform:none}
+.mod:nth-child(2){transition-delay:.07s}.mod:nth-child(3){transition-delay:.14s}.mod:nth-child(4){transition-delay:.21s}
+.mod:nth-child(5){transition-delay:.05s}.mod:nth-child(6){transition-delay:.12s}.mod:nth-child(7){transition-delay:.19s}.mod:nth-child(8){transition-delay:.26s}
+@media(max-width:1100px){.modules{grid-template-columns:repeat(2,1fr)}}
+
+/* loop strip */
+.loop{margin:44px 46px 80px;border:1.5px solid var(--ink);border-radius:16px;padding:22px 28px;display:flex;align-items:center;gap:26px;position:relative;flex-wrap:wrap}
+.loop .label{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;color:var(--purple-ink);text-transform:uppercase;line-height:1.5;flex:0 0 auto}
+.loop .steps{display:flex;align-items:center;gap:16px;flex:1;justify-content:space-around;flex-wrap:wrap;padding-right:210px}
+.step{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:var(--f-hand);font-size:20px;color:var(--ink)}
+.step svg{width:34px;height:30px}
+html.js .step{opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease}
+html.js .step.inview{opacity:1;transform:none}
+/* sticky */
+.sticky{position:absolute;right:14px;top:-44px;width:190px;background:var(--note);color:var(--ink);padding:14px 14px 14px;transform:rotate(3deg);box-shadow:5px 9px 20px -10px rgba(20,24,15,.6);font-family:var(--f-hand);transition:transform .3s ease}
+.sticky:hover{transform:rotate(1deg) translateY(-3px)}
+.sticky::before{content:"";position:absolute;left:50%;top:-11px;transform:translateX(-50%) rotate(-6deg);width:50px;height:20px;background:rgba(221,138,88,.5)}
+.sticky h4{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;margin:0 0 8px}
+.sticky .row{display:flex;align-items:center;gap:9px;font-size:18px;line-height:1.4}
+.sticky .cb{width:14px;height:14px;flex:0 0 auto}
+.sticky .heart{text-align:right;color:var(--purple-ink);font-size:18px;margin-top:6px}
+@media(max-width:1100px){.sticky{position:relative;right:auto;top:auto;margin-top:16px}.loop .steps{padding-right:0}}
+
+footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var(--ink3);display:flex;justify-content:space-between;border-top:1.3px solid rgba(32,36,26,.3);margin-top:auto}
+
+/* deeper story */
+.section-intro{padding:76px 46px 0;display:grid;grid-template-columns:1fr;gap:48px;align-items:end}
+.section-intro h2,.origin h2,.research h2,.collab h2{font-family:var(--f-head);font-weight:500;font-size:clamp(38px,4vw,62px);line-height:1.05;letter-spacing:-.02em;margin:12px 0 0}
+.section-intro p,.origin-copy p,.research-lede,.collab p{font-size:14px;line-height:1.75;color:var(--ink2);margin:0}
+.origin{margin:40px 46px 84px;padding:56px;border:1.5px solid var(--ink);border-radius:22px;position:relative;background:rgba(236,226,200,.08)}
+.origin::before{content:"FIRST PRESSURE";position:absolute;right:34px;top:-11px;background:var(--bg);padding:2px 10px;font-size:10px;letter-spacing:.16em;color:var(--purple-ink)}
+.origin-grid{display:grid;grid-template-columns:minmax(400px,1fr) minmax(400px,1fr);gap:72px;align-items:start}
+.origin h2 .u{white-space:normal}
+.origin-kicker{font-family:var(--f-hand);font-size:25px;line-height:1.35;color:var(--purple-ink);margin-top:28px}
+.origin-copy{display:grid;gap:20px}
+.origin-copy .big{font-family:var(--f-hand);font-size:25px;line-height:1.35;color:var(--ink);margin:0}
+.origin-thread{margin-top:42px;padding-top:28px;border-top:1.2px dashed rgba(32,36,26,.45);display:grid;grid-template-columns:repeat(2,1fr)}
+.origin-beat{padding:0 28px;min-width:0}
+.origin-beat:first-child{padding-left:0}
+.origin-beat:last-child{padding-right:0}
+.origin-beat+.origin-beat{border-left:1px solid rgba(32,36,26,.28)}
+.origin-beat .beat-label{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--purple-ink);margin-bottom:14px}
+.origin-beat p{font-family:var(--f-hand);font-size:19px;line-height:1.42;color:var(--ink2);margin:0}
+.origin-note{margin-top:34px;display:flex;gap:18px;align-items:center;border-top:1.2px dashed rgba(32,36,26,.45);padding-top:24px}
+.origin-note img{width:74px;height:74px;object-fit:contain;mix-blend-mode:multiply}
+.origin-note p{font-family:var(--f-hand);font-size:21px;line-height:1.35;margin:0;max-width:760px}
+.research{padding:4px 46px 92px}
+.research-head{display:grid;grid-template-columns:1fr;align-items:end;margin-bottom:42px}
+.research-lede{max-width:520px}
+.research-list{border-top:1.3px solid var(--ink)}
+.research-row{display:grid;grid-template-columns:minmax(170px,.34fr) minmax(0,1fr);gap:32px;padding:24px 0;border-bottom:1px dashed rgba(32,36,26,.35)}
+.research-row h3{font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;margin:0;color:var(--ink)}
+.research-row p{font-family:var(--f-hand);font-size:20px;line-height:1.42;margin:0;color:var(--ink2);max-width:920px}
+.research-row strong{font-family:var(--f-mono);font-size:.68em;font-weight:500;letter-spacing:.03em;color:var(--purple-ink)}
+.collab{margin:0 46px 86px;padding:56px;background:var(--navy);color:var(--cream);border-radius:22px;display:grid;grid-template-columns:1fr auto;gap:48px;align-items:end;position:relative;overflow:hidden}
+.collab::after{content:"↗";position:absolute;right:22px;top:-28px;font-family:var(--f-hand);font-size:130px;color:rgba(203,186,221,.12);transform:rotate(8deg)}
+.collab p{color:rgba(236,226,200,.78);max-width:660px;margin-top:18px}
+.collab .pill{background:var(--cream);color:var(--navy);position:relative;z-index:1;white-space:nowrap}
+.micro{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-ink)}
+
+@media(max-width:1100px){
+  .hero{grid-template-columns:1fr;align-items:flex-start;padding:20px 30px;gap:30px}
+  .hero-left{max-width:680px}
+  .diagram{flex-wrap:wrap}
+  .strip,.loop{flex-direction:column;align-items:flex-start}
+  .page{min-height:0}
+  .section-intro,.origin-grid{grid-template-columns:1fr}
+  .origin-thread{grid-template-columns:1fr;gap:24px}
+  .origin-beat{padding:0 0 24px}
+  .origin-beat+.origin-beat{border-left:0;border-top:1px solid rgba(32,36,26,.22);padding-top:24px}
+  .research-head{grid-template-columns:1fr}
+  .collab{grid-template-columns:1fr}
+}
+
+@media(max-width:720px){
+  html{scroll-padding-top:20px}.page#top{padding-top:0}
+  nav{padding:13px 20px}.nav-links{display:none}.brand b{font-size:27px}
+  nav>.pill{font-size:11px;padding:9px 13px}
+  .hero{padding:18px 20px}.diagram{justify-content:flex-start;overflow:hidden;width:100%}
+  .diagram{display:grid;grid-template-columns:1fr;gap:14px;overflow:visible}
+  .inputs{grid-column:1;grid-row:1;display:flex;align-self:auto;height:auto;flex-direction:row;flex-wrap:wrap}.inputs .lbl{position:static;width:100%;transform:none;text-align:left;padding-right:0}.inputs .box{position:static;width:auto;transform:none;font-size:11px}.inputs .box:last-child{margin-left:0!important}
+  html.js .inputs .box{transform:translateX(-16px)}html.js .inputs .box.inview{transform:none}
+  .head-art-wrap{grid-column:1;grid-row:2;width:100%;min-width:0;margin:-22px 0 -28px;transform:none}
+  .outputs{grid-column:1;grid-row:3;display:block;align-self:auto}.outputs .lbl{position:static;display:block;transform:none;text-align:left}.outputs .outs{position:static;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;transform:none;width:auto;margin-top:6px}.outputs .outs li{min-width:0;width:auto;margin-left:0}
+  .outputs::before{display:block;content:"\21B3";left:5px;top:-50px;font-family:var(--f-hand);font-size:38px;line-height:1;transform:rotate(12deg)}
+  .strip,.loop,.origin,.collab{margin-left:20px;margin-right:20px}
+  .strip{padding:16px}.strip .feats{justify-content:flex-start}.strip .arr{display:none}
+  .section-intro,.modules,.research{padding-left:20px;padding-right:20px}
+  .modules{grid-template-columns:1fr;gap:30px}.mod .ico{height:210px}.mod .ico img{height:100%;width:100%;max-width:270px}
+  .loop{padding:20px}.loop .steps{justify-content:flex-start}.loop .steps .arr{display:none}
+  .origin{padding:34px 24px}.origin-grid{gap:26px}.origin-note{align-items:flex-start}
+  .research-lede{margin-top:20px}.research-row{grid-template-columns:1fr;gap:10px}
+  .collab{padding:36px 24px}.collab h2{font-size:42px}
+  footer{padding:26px 20px;gap:18px;flex-direction:column}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html.js .box,html.js .mod,html.js .step,html.js .outs li{opacity:1;transform:none}
+  html.js .u::after{transform:none}
+  html.js .arrows{clip-path:none}
+  html{scroll-behavior:auto;scroll-snap-type:none}
+}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><filter id="sketch"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter></svg>
+
+<!-- ============ PAGE 1 ============ -->
+<div class="page" id="top">
+<nav>
+  <a class="brand" href="#"><img src="assets/mark.png" alt=""><b>chamelia</b></a>
+  <div class="nav-links"><a href="#architecture">architecture</a><a href="#loop">learning loop</a><a href="#origin">origin</a><a href="#research">research</a></div>
+  <a class="pill" href="https://github.com/LilMasala/InSiteOfficial" target="_blank" rel="noreferrer">view the work <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path class="sk" d="M4 12h15M13 6l7 6-7 6"/></svg></a>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <span class="eyebrow">A memory-centered cognitive architecture</span>
+    <h1>Intelligence should<br><span class="fwd u u-purple">remember forward.</span></h1>
+    <p class="lede">Chamelia is built to perceive a situation, retrieve what matters, imagine what different actions could lead to, decide, and learn from what actually happens&mdash;<span class="u u-green">over and over.</span></p>
+    <div class="cta-row">
+      <a class="pill" href="#architecture">explore the architecture <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path class="sk" d="M4 12h15M13 6l7 6-7 6"/></svg></a>
+      <a class="link-sm u u-purple" href="#origin">why it began &#8594;</a>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <div class="io inputs">
+      <span class="lbl">takes in</span>
+      <div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path class="sk" d="M3 17l5-6 4 3 5-7 4 5"/></svg>observations</div>
+      <div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path class="sk" d="M4 8h16M4 14h16M9 4v16M15 4v16"/></svg>experience</div>
+      <div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path class="sk" d="M6 16a4 4 0 0 1 1-8 5 5 0 0 1 10 1 3 3 0 0 1-1 7z"/></svg>testimony</div>
+      <div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path class="sk" d="M3 18l4-5 3 3 5-7 6 9"/></svg>constraints</div>
+      <div class="box">a whole history</div>
+    </div>
+
+    <svg class="arrows" hidden width="100" height="300" viewBox="0 0 100 300" fill="none" stroke="var(--purple)">
+      <path class="sk" d="M2 40 C45 40 62 120 98 130" stroke-width="2" stroke-dasharray="4 7"/>
+      <path class="sk" d="M2 90 C45 100 62 135 98 140" stroke-width="2" stroke-dasharray="4 7"/>
+      <path class="sk" d="M2 140 C45 150 66 150 98 150" stroke-width="2" stroke-dasharray="4 7"/>
+      <path class="sk" d="M2 190 C45 180 66 165 98 160" stroke-width="2" stroke-dasharray="4 7"/>
+    </svg>
+
+    <div class="head-art-wrap">
+      <img class="head-art" src="assets/hero-head-v5.png?v=1" alt="A translucent compact human profile with a few colorful signals entering a Chamelia creature inside the mind while a climber ascends a ladder">
+    </div>
+
+    <!-- hand-drawn head: crisp SVG, boils with the sketch filter -->
+    <svg class="head-svg" hidden width="390" height="480" viewBox="0 0 390 480" fill="none" aria-label="A mind that grows: a person climbs a ladder into a head full of swirling memory">
+      <!-- head outline, cream -->
+      <path class="sk" stroke="var(--cream)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"
+        d="M278 478 C278 430 288 394 309 357 C337 307 352 250 348 191 C344 111 301 58 239 57 C177 56 139 102 127 161 C121 190 121 211 110 235 C100 256 80 270 74 284 C70 293 77 299 92 299 L104 299 C98 305 89 310 88 316 C87 321 97 323 107 323 C103 330 95 334 96 340 C98 347 108 347 115 349 C112 361 109 373 115 384 C123 399 143 402 160 397 C176 392 189 392 200 401 C216 415 219 445 219 478"/>
+      <!-- radiating lines at the face -->
+      <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+        <path class="sk" d="M58 262 L32 252 M54 284 L22 282 M56 306 L28 316 M66 330 L44 344"/>
+      </g>
+      <g stroke="var(--purple)" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="3 6">
+        <path class="sk" d="M54 236 C38 226 28 220 16 218"/>
+        <path class="sk" d="M62 352 C50 364 42 370 32 374"/>
+      </g>
+      <path class="sk" stroke="var(--ink)" stroke-width="1.3" d="M12 298 l5 -5 5 5 -5 5 z"/>
+      <!-- memory swirl -->
+      <g stroke="var(--purple)" stroke-width="2.4" stroke-linecap="round" fill="none">
+        <path class="sk" d="M228 185 c 3 -14 20 -20 32 -11 c 14 10 11 34 -7 42 c -25 11 -50 -5 -51 -28 c -2 -31 28 -51 57 -44 c 36 8 49 47 31 74 c -20 30 -65 32 -91 6"/>
+      </g>
+      <g stroke="var(--purple)" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".65">
+        <path class="sk" d="M150 210 c -8 -44 24 -84 68 -88 c 40 -4 78 22 86 60"/>
+        <path class="sk" d="M310 214 c -4 40 -38 68 -80 66 c -20 -1 -38 -9 -50 -22"/>
+      </g>
+      <g stroke="#9aa0b8" stroke-width="1.8" stroke-linecap="round" fill="none" opacity=".8">
+        <path class="sk" d="M142 132 a 104 96 0 0 1 136 -10" stroke-dasharray="1 6"/>
+        <path class="sk" d="M322 216 a 100 92 0 0 1 -116 56" stroke-dasharray="1 6"/>
+        <path class="sk" d="M138 226 a 100 92 0 0 0 44 60" stroke-dasharray="1 6"/>
+      </g>
+      <!-- the creature, drawn in the same inky notebook language as the modules -->
+      <g class="floaty f2" transform="rotate(-8 228 186)">
+        <path d="M247 213 C218 222 193 207 195 181 C197 157 224 146 248 158 C267 168 271 188 258 199 C245 210 226 201 228 184 C229 175 237 170 247 173" fill="none" stroke="var(--navy)" stroke-width="14" stroke-linecap="round"/>
+        <path d="M207 155 C196 150 184 156 181 166 C179 176 189 181 203 178 C215 175 222 164 216 158 C214 156 211 155 207 155Z" fill="var(--navy)"/>
+        <circle cx="195" cy="165" r="5.4" fill="var(--cream)"/><circle cx="194" cy="164" r="2" fill="var(--ink)"/>
+        <path d="M203 177 C196 190 184 192 178 185 M220 202 C211 211 201 211 196 205" fill="none" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
+        <g fill="none" stroke="var(--cream)" stroke-width="1.2" stroke-linecap="round">
+          <path d="M211 170 q5 -6 9 0 q-4 7 -9 0z"/><path d="M208 191 l5 -4 4 5 -5 4z"/><path d="M235 204 q4 -4 8 0"/>
+        </g>
+      </g>
+      <!-- floating memory shapes -->
+      <g class="floaty"><circle cx="306" cy="112" r="7" fill="var(--purple)"/></g>
+      <g class="floaty f3"><rect x="324" y="142" width="12" height="12" fill="var(--green)" transform="rotate(10 330 148)"/></g>
+      <g class="floaty f4"><path d="M286 88 l8 14 h-16 z" fill="var(--pink)"/></g>
+      <g class="floaty f3">
+        <rect x="290" y="158" width="16" height="20" fill="var(--cream)" stroke="var(--ink)" stroke-width="1.2" transform="rotate(10 298 168)"/>
+        <path d="M294 165 l9 1.5 M293 170 l9 1.5" stroke="var(--ink)" stroke-width="1" transform="rotate(10 298 168)"/>
+      </g>
+      <g class="floaty f4">
+        <rect x="308" y="196" width="13" height="16" fill="var(--lav)" stroke="var(--ink)" stroke-width="1.1" transform="rotate(-8 314 204)"/>
+      </g>
+      <!-- stipple dots -->
+      <g fill="var(--pink)" opacity=".9">
+        <circle cx="170" cy="108" r="2"/><circle cx="326" cy="192" r="2"/><circle cx="178" cy="248" r="2"/>
+      </g>
+      <g fill="var(--cream)">
+        <circle cx="252" cy="96" r="1.8"/><circle cx="152" cy="192" r="1.8"/>
+      </g>
+      <!-- sparkles -->
+      <g fill="var(--ink)">
+        <path class="sk" d="M248 28 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2 z"/>
+        <path class="sk" d="M332 80 l1.6 4.8 4.8 1.6 -4.8 1.6 -1.6 4.8 -1.6 -4.8 -4.8 -1.6 4.8 -1.6 z"/>
+      </g>
+      <path class="sk" fill="var(--cream)" d="M144 80 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2 z"/>
+      <!-- ladder (rails + rungs in one path so the sketch filter keeps a real bbox) -->
+      <g stroke="var(--navy)" stroke-width="2.4" stroke-linecap="round">
+        <path class="sk" d="M197 478 L188 300 M229 478 L221 300 M189 310 L221 310 M190 342 L222 342 M192 374 L224 374 M193 406 L225 406 M195 438 L227 438 M196 468 L228 468"/>
+      </g>
+      <!-- the climber, reaching the top of the ladder -->
+      <g stroke="var(--navy)" stroke-width="2.1" stroke-linecap="round" fill="none">
+        <circle class="sk" cx="206" cy="318" r="8"/>
+        <path class="sk" d="M206 326 L206 358 M206 333 L190 314 M206 333 L221 314 M206 358 L196 376 M206 358 L216 376"/>
+      </g>
+    </svg>
+
+    <div class="io outputs">
+      <span class="lbl">outputs</span>
+      <ul class="outs"><li>insights</li><li>predictions</li><li>decisions</li><li>actions</li><li><span class="u u-green">better outcomes</span></li></ul>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ============ PAGE 2 ============ -->
+<div class="page" id="architecture">
+<section class="section-intro">
+  <div>
+    <span class="micro">Eight parts, one recursive system</span>
+    <h2>Built more like a mind<br>than a <span class="u u-purple">model endpoint.</span></h2>
+  </div>
+</section>
+<section class="modules">
+  <a class="mod module-link" href="module.html?module=perception" aria-label="Open the Perception module page">
+    <div class="ico"><img src="icons/v5/perception-eye.png?v=1" alt="A complete hand-drawn eye representing perception"></div>
+    <h3 class="u u-purple">Perception</h3>
+    <p>Turns messy observations into a compact state at several scales, without needing labels for what matters.</p>
+  </a>
+  <a class="mod module-link" href="module.html?module=memory" aria-label="Open the Unified Memory module page">
+    <div class="ico"><img src="icons/v4/memory.png?v=1" alt="A complete hand-drawn Chamelia creature tending a swirl of memory"></div>
+    <h3 class="u u-pink">Unified Memory</h3>
+    <p>Keeps episodes, beliefs, testimony, and reusable skills&mdash;then retrieves what today makes relevant. <span class="heart">&#9825;</span></p>
+  </a>
+  <a class="mod module-link" href="module.html?module=configurator" aria-label="Open the Configurator module page">
+    <div class="ico"><img src="icons/v4/configurator.png?v=1" alt="A complete hand-drawn Chamelia creature arranging context for the configurator"></div>
+    <h3 class="u u-green">Configurator</h3>
+    <p>Blends perception, memory, thought, beliefs, and outside knowledge into one small working brief.</p>
+  </a>
+  <a class="mod module-link" href="module.html?module=actor" aria-label="Open the Actor module page">
+    <div class="ico"><img src="icons/v4/actor.png?v=1" alt="A complete hand-drawn Chamelia creature proposing actions"></div>
+    <h3 class="u u-green">Actor</h3>
+    <p>Proposes a few plausible actions&mdash;fast when it can, deliberate when the stakes ask for more. <span class="heart">&#10022;</span></p>
+  </a>
+  <a class="mod module-link" href="module.html?module=world-model" aria-label="Open the World Model module page">
+    <div class="ico"><img src="icons/v3/worldmodel.png?v=1" alt="A hand-drawn Chamelia creature imagining a branching world"></div>
+    <h3 class="u u-purple">World Model</h3>
+    <p>Imagines the futures those actions could create before anything touches the real world.</p>
+  </a>
+  <a class="mod module-link mod-cost" href="module.html?module=cost" aria-label="Open the Cost module page">
+    <div class="ico"><img src="icons/v3/cost.png?v=1" alt="A hand-drawn Chamelia creature weighing possible costs"></div>
+    <h3 class="u u-coral">Cost</h3>
+    <p>Scores each path with explicit rules and learned judgment, keeping priorities inspectable.</p>
+  </a>
+  <a class="mod module-link" href="module.html?module=sleep" aria-label="Open the Sleep module page">
+    <div class="ico"><img src="icons/v3/sleep.png?v=1" alt="A hand-drawn Chamelia creature sleeping on a crescent moon"></div>
+    <h3 class="u u-purple">Sleep</h3>
+    <p>Turns experience into memory: compressing what worked, learning from regret, and promoting useful skills. <span class="heart">&#10022;</span></p>
+  </a>
+  <a class="mod module-link" href="module.html?module=metacognition" aria-label="Open the Metacognition module page">
+    <div class="ico"><img src="icons/v3/controller.png?v=1" alt="A hand-drawn Chamelia creature inspecting its own cognition"></div>
+    <h3 class="u u-purple">Metacognition</h3>
+    <p>Adapts attention, search, and compute to the task and the resources available. <span class="heart">&#9825;</span></p>
+  </a>
+</section>
+
+<div class="loop" id="loop">
+  <div class="label">LEARNING<br>IS A LOOP</div>
+  <div class="steps">
+    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><circle class="sk" cx="17" cy="12" r="3"/><path class="sk" d="M11 15c-3 6 9 6 12 0M6 22h22"/></svg>experience</div>
+    <span class="arr">&#8594;</span>
+    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><rect class="sk" x="8" y="5" width="16" height="20" rx="2"/><path class="sk" d="M12 11h8M12 15h8M12 19h5"/></svg>represent</div>
+    <span class="arr">&#8594;</span>
+    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><path class="sk" d="M10 22c-6-4-6-16 3-16 3 0 4 2 4 2s1-2 4-2c9 0 9 12 3 16"/></svg>remember</div>
+    <span class="arr">&#8594;</span>
+    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><path class="sk" d="M6 22 Q17 2 28 22 M10 20 Q17 9 24 20"/></svg>imagine</div>
+    <span class="arr">&#8594;</span>
+    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><path class="sk" d="M8 15 l6 6 13-15"/></svg>decide</div>
+    <span class="arr">&#8594;</span>
+    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><path class="sk" d="M6 12a11 11 0 0 1 20-4M26 6v5h-5M28 18a11 11 0 0 1-20 4M8 24v-5h5"/></svg>outcome</div>
+  </div>
+  <div class="sticky">
+    <h4>MEMORY IS NOT ONE THING:</h4>
+    <div class="row">remember when</div>
+    <div class="row">I know that</div>
+    <div class="row">I was told that</div>
+    <div class="row">I know how</div>
+    <div class="heart">&#9825;</div>
+  </div>
+</div>
+
+<section class="origin" id="origin">
+  <div class="origin-grid">
+    <div>
+      <span class="micro">Why Type 1 diabetes came first</span>
+      <h2>Chamelia began as a<br><span class="u u-pink">Type 1 diabetes project.</span></h2>
+      <p class="origin-kicker">The original use case was insulin-pump setting recommendations.</p>
+    </div>
+    <div class="origin-copy">
+      <p class="big">Someone close to me has Type 1 diabetes. Watching her manage it gave me an indescribable appreciation for how strong-willed and intelligent she was.</p>
+      <p>The same number could mean something different depending on sleep, exercise, stress, hormones, illness, or what had happened over the previous few days. We started prototyping a system that could keep track of those observations and use them to recommend changes to insulin-pump settings.</p>
+      <p>That project eventually became Chamelia: a system designed to remember what happened, understand the current situation, consider what different actions might lead to, and learn from the outcome.</p>
+    </div>
+  </div>
+</section>
+
+<section class="research" id="research">
+  <div class="research-head">
+    <div><span class="micro">The working research stack</span><h2>What is actually<br><span class="u u-green">inside the loop.</span></h2></div>
+  </div>
+  <div class="research-list">
+    <article class="research-row"><h3>Perception / JEPA</h3><p>Perception is built around <strong>H-JEPA</strong>, drawing on Yann LeCun&rsquo;s joint-embedding predictive work. It learns compact representations from context at several scales without wasting effort reconstructing every raw observation. The <strong>VICReg</strong> objective helps keep those representations varied instead of collapsing into the same answer.</p></article>
+    <article class="research-row"><h3>World models / RL</h3><p>The planning side draws from model-based reinforcement learning, especially the ideas behind <strong>Dreamer</strong> and <strong>MuZero</strong>: learn a useful state, predict what actions may do to it, and reason inside the model before acting. Chamelia pairs an action-conditioned world model with tree search rather than treating the first plausible action as the answer.</p></article>
+    <article class="research-row"><h3>Unified memory</h3><p><strong>Episodic</strong> memory keeps whole moments, including the options considered and what happened afterward. <strong>Semantic</strong> memory distills beliefs across moments. <strong>Procedural</strong> memory stores methods the actor can call again. Testimony and injected knowledge can enter memory too, but remain evidence to evaluate rather than instructions to obey.</p></article>
+    <article class="research-row"><h3>Sleep / skill formation</h3><p><strong>LOVE</strong> finds patterns that kept working. <strong>Stitch</strong> compresses a successful sequence into a reusable move. <strong>RSD</strong> turns missed opportunities and regret into candidates for next time. <strong>BodeGEN</strong> explores variations so the system can keep the version that tests best.</p></article>
+    <article class="research-row"><h3>Sleep / promotion</h3><p><strong>Choreographer</strong> replays past situations to ask whether a candidate skill would actually have helped. <strong>LILO</strong> gives useful skills readable names. <strong>Audit</strong> promotes what earns its place and drops what does not. <strong>Consolidate</strong> turns repeated evidence into beliefs.</p></article>
+    <article class="research-row"><h3>Constraints and cost</h3><p>Constraints remove actions that are not allowed before search. Cost scores what remains with both readable domain rules and learned long-run judgment. What is possible, what is permitted, what might happen, and what matters stay separate enough to inspect.</p></article>
+  </div>
+</section>
+
+<section class="collab" id="collaborate">
+  <div><span class="micro">For builders, researchers, and aligned investors</span><h2>Bring a hard problem.<br>Help test the thesis.</h2><p>I’m looking for technical collaborators who want to pull the architecture apart with care, and investors who understand that long-horizon intelligence is an engineering problem worth staying with.</p></div>
+  <a class="pill" href="https://github.com/LilMasala/InSiteOfficial" target="_blank" rel="noreferrer">explore the repository &#8599;</a>
+</section>
+
+<footer><span>&copy; 2026 Chamelia</span><span>perceive &middot; remember &middot; imagine &middot; decide</span></footer>
+</div>
+
+<script>
+document.documentElement.classList.add('js');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* boiling line: cycle the sketch filter seed like frame-by-frame animation */
+if(!reduced){
+  const turb = document.querySelector('#sketch feTurbulence');
+  const seeds = [7, 23, 41];
+  let i = 0;
+  setInterval(() => { i = (i + 1) % seeds.length; turb.setAttribute('seed', seeds[i]); }, 280);
+}
+
+/* scroll reveals */
+const io = new IntersectionObserver(entries => {
+  for(const e of entries){
+    if(e.isIntersecting){ e.target.classList.add('inview'); io.unobserve(e.target); }
+  }
+}, {threshold:.2});
+document.querySelectorAll('.box, .mod, .step, .u, .arrows, .outputs').forEach(el => io.observe(el));
+
+</script>
+</body></html>
