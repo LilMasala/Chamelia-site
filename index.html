@@ -428,7 +428,7 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
       </div>
 
       <article class="flow-node node-perception">
-        <div class="flow-node-art"><img src="icons/v5/perception-eye.png?v=1" alt=""><span class="pupil-overlay"></span><span class="state-orbit"><i class="state-shape circle"></i><i class="state-shape square"></i><i class="state-shape triangle"></i></span><span class="state-alpha">a</span></div>
+        <div class="flow-node-art"><img src="icons/v5/perception-eye.png?v=1" alt=""><span class="pupil-overlay"></span></div>
         <span class="flow-node-name">Perception</span><span class="flow-node-note">compresses the moment</span>
       </article>
       <article class="flow-node node-memory">
@@ -449,7 +449,6 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
       </article>
 
       <span class="alpha-packet">a</span>
-      <i class="memory-shape memory-episode"></i><i class="memory-shape memory-belief"></i><i class="memory-shape memory-skill"></i>
       <span class="memory-scrap one">similar morning</span>
       <span class="memory-scrap two">poor sleep</span>
       <span class="memory-scrap three">exercise sensitivity</span>
@@ -459,19 +458,18 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
         <img src="icons/v3/controller.png?v=1" alt="">
         <div><strong>Metacognition</strong><span>allocates attention + compute</span><span class="resource-budget">budget <b>64%</b></span><span class="resource-meter"><i></i><i></i><i></i><i></i></span></div>
       </aside>
-      <i class="resource-thread"></i>
 
       <div class="search-arena">
         <span class="search-label">MCTS search</span><span class="search-note">propose &middot; imagine &middot; score &middot; revisit</span>
         <article class="flow-node node-actor"><div class="flow-node-art"><img src="icons/v4/actor.png?v=1" alt=""></div><span class="flow-node-name">Actor</span></article>
         <article class="flow-node node-world"><div class="flow-node-art"><img src="icons/v3/worldmodel.png?v=1" alt=""></div><span class="flow-node-name">World Model</span></article>
         <article class="flow-node node-cost"><div class="flow-node-art"><img src="icons/v3/cost.png?v=1" alt=""></div><span class="flow-node-name">Cost</span></article>
-        <div class="action-space"><span>action space</span><i>wait</i><i>basal</i><i>target</i><i>carbs</i><i>monitor</i></div>
-        <i class="action-seed a"></i><i class="action-seed b"></i><i class="action-seed c"></i>
+        <div class="action-space"><span>bag of actions</span><i>wait</i><i>adjust basal</i><i>change carb ratio</i><i>change target</i><i>monitor</i></div>
+        <span class="action-candidate candidate-a">change carb ratio</span><span class="action-candidate candidate-b">adjust basal window</span><span class="action-candidate candidate-c">wait + monitor</span>
         <div class="mcts-tree">
           <i class="tree-line t1"></i><i class="tree-line t2"></i><i class="tree-line t3"></i>
           <i class="tree-line t1a"></i><i class="tree-line t1b"></i><i class="tree-line t2a"></i><i class="tree-line t2b"></i><i class="tree-line t3a"></i><i class="tree-line t3b"></i>
-          <span class="cost-mark score-a">0.68</span><span class="cost-mark score-b">0.41</span><span class="cost-mark score-c">0.76</span><span class="prune-mark">blocked &#215;</span>
+          <span class="cost-mark score-a">0.68</span><span class="cost-mark score-b">0.41</span><span class="cost-mark score-c">0.76</span>
         </div>
       </div>
 
@@ -485,11 +483,9 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
         <div class="trace-key"><span class="pred">predicted</span><span>observed</span></div>
       </div>
 
-      <span class="feedback-arc"></span>
-      <i class="feedback-seed seed-memory"></i><i class="feedback-seed seed-world"></i><i class="feedback-seed seed-value"></i><i class="feedback-seed seed-sleep"></i>
       <span class="skill-stamp">new reusable skill</span>
 
-      <i class="flow-link link-perception-memory"></i><i class="flow-link link-perception-config"></i><i class="flow-link link-memory-config"></i><i class="flow-link link-config-search"></i><i class="flow-link link-search-action"></i><i class="flow-link link-action-reality"></i>
+      <i class="flow-link link-perception-memory"></i><i class="flow-link link-perception-config"></i><i class="flow-link link-memory-config"></i><i class="flow-link link-config-search"></i>
     </div>
 
     <figcaption class="episode-caption" data-flow-caption>Blood glucose, insulin, sleep, heart rate, and context arrive as one messy moment.</figcaption>
@@ -514,12 +510,12 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
     <ol>
       <li>Blood glucose, insulin, sleep, heart rate, and context arrive as one moment.</li>
       <li>Perception compresses those observations into one compact state, <em>a</em>.</li>
-      <li>State <em>a</em> queries memory, which retrieves similar episodes, beliefs, and reusable skills.</li>
-      <li>State <em>a</em> and the retrieved memories flow into the configurator with goals and constraints.</li>
-      <li>Metacognition allocates attention and compute. The actor pulls candidates from the action space; the world model branches futures; constraints prune; and cost scores.</li>
+      <li>State <em>a</em> queries memory, which retrieves a similar morning, poor sleep, and exercise sensitivity.</li>
+      <li>State <em>a</em> and those labeled memories enter the configurator from either side.</li>
+      <li>The actor draws three named candidates from its bag of actions. Each becomes the root of its own imagined future; cost scores the results while metacognition allocates attention and compute.</li>
       <li>The lowest-cost valid candidate leaves search and becomes the chosen action.</li>
       <li>Reality returns an observed outcome, which may differ from the prediction.</li>
-      <li>The outcome updates memory and learning signals; sleep later consolidates useful patterns.</li>
+      <li>The outcome sends an upgrade pulse through the system; sleep consolidates what worked and returns a reusable skill to memory.</li>
     </ol>
   </details>
 </section>

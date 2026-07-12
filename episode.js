@@ -7,17 +7,17 @@
 
   const steps = [
     {id:'raw-input', group:'input', duration:2600, short:'Life arrives', caption:'Blood glucose, insulin, sleep, heart rate, and context arrive as one messy moment.'},
-    {id:'perceive', group:'perception', duration:2900, short:'Perception', caption:'Perception circles those observations and compresses them into one current state, a.'},
-    {id:'retrieve', group:'memory', duration:2800, short:'Memory', caption:'State a queries memory; related episodes, beliefs, and reusable skills return as a small set of shapes.'},
-    {id:'configure', group:'configure', duration:2700, short:'Configure', caption:'State a and the retrieved memories converge in the configurator, alongside goals and constraints.'},
-    {id:'propose', group:'search', duration:2500, short:'Propose', caption:'The actor reaches into the action space and pulls out a few plausible candidates.'},
+    {id:'perceive', group:'perception', duration:3100, short:'Perception', caption:'The observations float into the eye and are absorbed. Only after digestion does one current state, a, appear.'},
+    {id:'retrieve', group:'memory', duration:2900, short:'Memory', caption:'State a queries memory; a similar morning, poor sleep, and exercise sensitivity return as labeled recalls.'},
+    {id:'configure', group:'configure', duration:2900, short:'Configure', caption:'State a enters from one side and the recalled context from the other. The configurator assembles them with goals and constraints.'},
+    {id:'propose', group:'search', duration:2800, short:'Propose', caption:'The actor draws three named candidates from its bag: adjust the basal window, change the carb ratio, or wait and monitor.'},
     {id:'simulate', group:'search', duration:3000, short:'Imagine', caption:'The world model grows futures while metacognition sets how deeply to search under the available budget.'},
-    {id:'score', group:'search', duration:2400, short:'Score', caption:'Cost annotates each branch; constraints block what is not allowed.'},
-    {id:'choose', group:'action', duration:2200, short:'Choose', caption:'Among valid branches, candidate B has the lowest cost: 0.41. Search selects it.'},
+    {id:'score', group:'search', duration:2400, short:'Score', caption:'Each candidate begins its own imagined path. Cost annotates the three resulting futures.'},
+    {id:'choose', group:'action', duration:2400, short:'Choose', caption:'The two higher costs are crossed out. Adjusting the basal window has the lowest cost, 0.41, so search selects it.'},
     {id:'act', group:'action', duration:2700, short:'Act', caption:'The selected action travels out of the search and into the person’s real situation.'},
     {id:'observe', group:'reality', duration:2900, short:'Reality answers', caption:'Reality answers. The observed glucose trace is compared smoothly with what the system expected.'},
-    {id:'learn', group:'feedback', duration:2600, short:'Learn', caption:'The outcome returns as an episode, prediction error, and reward or regret—not one generic flash.'},
-    {id:'consolidate', group:'sleep', duration:2600, short:'Consolidate', caption:'Sleep replays the episode and keeps the patterns and skills that earn a place.'}
+    {id:'learn', group:'feedback', duration:2900, short:'Learn', caption:'The outcome sends one coordinated upgrade pulse through the architecture.'},
+    {id:'consolidate', group:'sleep', duration:2900, short:'Consolidate', caption:'Sleep replays what happened; the resulting reusable skill flows back into memory.'}
   ];
   const groupOrder = ['input','perception','memory','configure','search','action','reality','feedback','sleep'];
   const groupStart = Object.fromEntries(groupOrder.map(group => [group, steps.findIndex(step => step.group === group)]));
