@@ -140,24 +140,6 @@ html.js .mod.inview{opacity:1;transform:none}
 .mod:nth-child(5){transition-delay:.05s}.mod:nth-child(6){transition-delay:.12s}.mod:nth-child(7){transition-delay:.19s}.mod:nth-child(8){transition-delay:.26s}
 @media(max-width:1100px){.modules{grid-template-columns:repeat(2,1fr)}}
 
-/* loop strip */
-.loop{margin:44px 46px 80px;border:1.5px solid var(--ink);border-radius:16px;padding:22px 28px;display:flex;align-items:center;gap:26px;position:relative;flex-wrap:wrap}
-.loop .label{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;color:var(--purple-ink);text-transform:uppercase;line-height:1.5;flex:0 0 auto}
-.loop .steps{display:flex;align-items:center;gap:16px;flex:1;justify-content:space-around;flex-wrap:wrap;padding-right:210px}
-.step{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:var(--f-hand);font-size:20px;color:var(--ink)}
-.step svg{width:34px;height:30px}
-html.js .step{opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease}
-html.js .step.inview{opacity:1;transform:none}
-/* sticky */
-.sticky{position:absolute;right:14px;top:-44px;width:190px;background:var(--note);color:var(--ink);padding:14px 14px 14px;transform:rotate(3deg);box-shadow:5px 9px 20px -10px rgba(20,24,15,.6);font-family:var(--f-hand);transition:transform .3s ease}
-.sticky:hover{transform:rotate(1deg) translateY(-3px)}
-.sticky::before{content:"";position:absolute;left:50%;top:-11px;transform:translateX(-50%) rotate(-6deg);width:50px;height:20px;background:rgba(221,138,88,.5)}
-.sticky h4{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;margin:0 0 8px}
-.sticky .row{display:flex;align-items:center;gap:9px;font-size:18px;line-height:1.4}
-.sticky .cb{width:14px;height:14px;flex:0 0 auto}
-.sticky .heart{text-align:right;color:var(--purple-ink);font-size:18px;margin-top:6px}
-@media(max-width:1100px){.sticky{position:relative;right:auto;top:auto;margin-top:16px}.loop .steps{padding-right:0}}
-
 footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var(--ink3);display:flex;justify-content:space-between;border-top:1.3px solid rgba(32,36,26,.3);margin-top:auto}
 
 /* deeper story */
@@ -199,7 +181,7 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
   .hero{grid-template-columns:1fr;align-items:flex-start;padding:20px 30px;gap:30px}
   .hero-left{max-width:680px}
   .diagram{flex-wrap:wrap}
-  .strip,.loop{flex-direction:column;align-items:flex-start}
+  .strip{flex-direction:column;align-items:flex-start}
   .page{min-height:0}
   .section-intro,.origin-grid{grid-template-columns:1fr}
   .origin-thread{grid-template-columns:1fr;gap:24px}
@@ -224,7 +206,6 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
   .strip{padding:16px}.strip .feats{justify-content:flex-start}.strip .arr{display:none}
   .section-intro,.modules,.research{padding-left:20px;padding-right:20px}
   .modules{grid-template-columns:1fr;gap:30px}.mod .ico{height:210px}.mod .ico img{height:100%;width:100%;max-width:270px}
-  .loop{padding:20px}.loop .steps{justify-content:flex-start}.loop .steps .arr{display:none}
   .origin{padding:34px 24px}.origin-grid{gap:26px}.origin-note{align-items:flex-start}
   .research-lede{margin-top:20px}.research-row{grid-template-columns:1fr;gap:10px}
   .collab{padding:36px 24px}.collab h2{font-size:42px}
@@ -232,13 +213,16 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
 }
 
 @media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
-  html.js .box,html.js .mod,html.js .step,html.js .outs li{opacity:1;transform:none}
-  html.js .u::after{transform:none}
-  html.js .arrows{clip-path:none}
-  html{scroll-behavior:auto;scroll-snap-type:none}
+  html:not(.force-motion) *,html:not(.force-motion) *::before,html:not(.force-motion) *::after{animation:none!important;transition:none!important}
+  html:not(.force-motion).js .box,html:not(.force-motion).js .mod,html:not(.force-motion).js .outs li{opacity:1;transform:none}
+  html:not(.force-motion).js .u::after{transform:none}
+  html:not(.force-motion).js .arrows{clip-path:none}
+  html:not(.force-motion){scroll-behavior:auto;scroll-snap-type:none}
 }
-</style></head>
+</style>
+<link rel="stylesheet" href="episode.css?v=1">
+<script src="episode.js?v=1" defer></script>
+</head>
 <body>
 <svg width="0" height="0" style="position:absolute"><filter id="sketch"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter></svg>
 
@@ -413,30 +397,126 @@ footer{padding:30px 46px 40px;font-family:var(--f-mono);font-size:12px;color:var
   </a>
 </section>
 
-<div class="loop" id="loop">
-  <div class="label">LEARNING<br>IS A LOOP</div>
-  <div class="steps">
-    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><circle class="sk" cx="17" cy="12" r="3"/><path class="sk" d="M11 15c-3 6 9 6 12 0M6 22h22"/></svg>experience</div>
-    <span class="arr">&#8594;</span>
-    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><rect class="sk" x="8" y="5" width="16" height="20" rx="2"/><path class="sk" d="M12 11h8M12 15h8M12 19h5"/></svg>represent</div>
-    <span class="arr">&#8594;</span>
-    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><path class="sk" d="M10 22c-6-4-6-16 3-16 3 0 4 2 4 2s1-2 4-2c9 0 9 12 3 16"/></svg>remember</div>
-    <span class="arr">&#8594;</span>
-    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><path class="sk" d="M6 22 Q17 2 28 22 M10 20 Q17 9 24 20"/></svg>imagine</div>
-    <span class="arr">&#8594;</span>
-    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><path class="sk" d="M8 15 l6 6 13-15"/></svg>decide</div>
-    <span class="arr">&#8594;</span>
-    <div class="step"><svg viewBox="0 0 34 30" fill="none" stroke="var(--ink)" stroke-width="1.4"><path class="sk" d="M6 12a11 11 0 0 1 20-4M26 6v5h-5M28 18a11 11 0 0 1-20 4M8 24v-5h5"/></svg>outcome</div>
-  </div>
-  <div class="sticky">
-    <h4>MEMORY IS NOT ONE THING:</h4>
-    <div class="row">remember when</div>
-    <div class="row">I know that</div>
-    <div class="row">I was told that</div>
-    <div class="row">I know how</div>
-    <div class="heart">&#9825;</div>
-  </div>
-</div>
+<section class="episode" id="loop" data-episode aria-labelledby="episode-title">
+  <header class="episode-head">
+    <div>
+      <span class="micro">The architecture, in motion</span>
+      <h2 id="episode-title">One episode through Chamelia.</h2>
+      <p class="episode-intro">An illustrative Type 1 diabetes moment, from raw life to a decision&mdash;and back as learning.</p>
+    </div>
+    <div class="episode-controls" aria-label="Episode controls">
+      <span class="episode-progress" data-flow-progress>Step 1 of 13 &middot; Life arrives</span>
+      <button class="episode-control" type="button" data-flow-prev aria-label="Show previous stage">previous</button>
+      <button class="episode-control" type="button" data-flow-toggle aria-pressed="false">play episode</button>
+      <button class="episode-control" type="button" data-flow-next aria-label="Show next stage">next</button>
+      <button class="episode-control" type="button" data-flow-replay aria-label="Replay episode from the beginning">replay</button>
+    </div>
+  </header>
+
+  <figure class="episode-figure">
+    <div class="episode-stage" aria-hidden="true">
+      <span class="phase-label phase-understand">understand</span>
+      <span class="phase-label phase-deliberate">deliberate</span>
+      <span class="phase-label phase-learn">learn</span>
+
+      <div class="raw-stream">
+        <div class="data-scrap scrap-bg"><strong>BG 184 &#8593;</strong><small>rising</small></div>
+        <div class="data-scrap scrap-insulin"><strong>insulin 1.2u</strong><small>on board</small></div>
+        <div class="data-scrap scrap-sleep"><strong>sleep 5h 42m</strong><small>fragmented</small></div>
+        <div class="data-scrap scrap-heart"><strong>HR 104</strong><small>after movement</small></div>
+        <div class="data-scrap scrap-context"><strong>context</strong><small>after exercise</small></div>
+      </div>
+
+      <article class="flow-node node-perception">
+        <div class="flow-node-art"><img src="icons/v5/perception-eye.png?v=1" alt=""><span class="pupil-overlay"></span><span class="state-orbit"><i class="state-shape circle"></i><i class="state-shape square"></i><i class="state-shape triangle"></i></span></div>
+        <span class="flow-node-name">Perception</span><span class="flow-node-note">compresses the moment</span>
+      </article>
+      <article class="flow-node node-memory">
+        <div class="flow-node-art"><img src="icons/v4/memory.png?v=1" alt=""></div>
+        <span class="flow-node-name">Memory</span><span class="flow-node-note">recognizes what matters</span>
+      </article>
+      <article class="flow-node node-configurator">
+        <div class="flow-node-art"><img src="icons/v4/configurator.png?v=1" alt=""></div>
+        <span class="flow-node-name">Configurator</span><span class="flow-node-note">assembles the brief</span>
+      </article>
+      <article class="flow-node node-reality">
+        <div class="flow-node-art"><span class="reality-world"><i class="rw-sun"></i><i class="rw-person"></i><i class="rw-clock"></i><i class="rw-horizon"></i></span></div>
+        <span class="flow-node-name">Reality</span><span class="flow-node-note">answers back</span>
+      </article>
+      <article class="flow-node node-sleep">
+        <div class="flow-node-art"><img src="icons/v3/sleep.png?v=1" alt=""></div>
+        <span class="flow-node-name">Sleep</span><span class="flow-node-note">replays what happened</span>
+      </article>
+
+      <span class="state-packet packet-memory"><i></i><i></i><i></i></span>
+      <span class="state-packet packet-config"><i></i><i></i><i></i></span>
+      <span class="memory-scrap one">similar morning</span>
+      <span class="memory-scrap two">poor sleep</span>
+      <span class="memory-scrap three">exercise sensitivity</span>
+      <div class="working-brief"><span class="brief-line"></span><span class="brief-line"></span><span class="brief-line"></span></div>
+
+      <div class="search-arena">
+        <span class="search-label">MCTS search</span><span class="search-note">propose &middot; imagine &middot; score &middot; revisit</span>
+        <article class="flow-node node-actor"><div class="flow-node-art"><img src="icons/v4/actor.png?v=1" alt=""></div><span class="flow-node-name">Actor</span></article>
+        <article class="flow-node node-world"><div class="flow-node-art"><img src="icons/v3/worldmodel.png?v=1" alt=""></div><span class="flow-node-name">World Model</span></article>
+        <article class="flow-node node-cost"><div class="flow-node-art"><img src="icons/v3/cost.png?v=1" alt=""></div><span class="flow-node-name">Cost</span></article>
+        <article class="flow-node node-meta"><div class="flow-node-art"><img src="icons/v3/controller.png?v=1" alt=""></div><span class="flow-node-name">Metacognition</span></article>
+        <i class="action-seed a"></i><i class="action-seed b"></i><i class="action-seed c"></i>
+        <div class="mcts-tree">
+          <i class="tree-line t1"></i><i class="tree-line t2"></i><i class="tree-line t3"></i>
+          <i class="tree-line t1a"></i><i class="tree-line t1b"></i><i class="tree-line t2a"></i><i class="tree-line t2b"></i><i class="tree-line t3a"></i><i class="tree-line t3b"></i>
+          <span class="cost-mark score-a">0.18</span><span class="cost-mark score-b">0.41</span><span class="cost-mark score-c">0.76</span><span class="prune-mark">&#215;</span><span class="attention-ring"></span>
+        </div>
+      </div>
+
+      <div class="chosen-action"><strong>candidate action</strong><small>adjust basal window</small></div>
+      <div class="reality-card">
+        <h4>prediction / observation</h4>
+        <div class="trace">
+          <i class="trace-line predicted" style="--top:30px;--w:34px;--a:-14deg;--d:.1s"></i><i class="trace-line predicted" style="--top:22px;--w:38px;--a:8deg;--d:.3s;left:40px"></i><i class="trace-line predicted" style="--top:27px;--w:46px;--a:-7deg;--d:.5s;left:75px"></i>
+          <i class="trace-line observed" style="--top:35px;--w:36px;--a:-20deg;--d:.7s"></i><i class="trace-line observed" style="--top:23px;--w:40px;--a:-4deg;--d:.9s;left:42px"></i><i class="trace-line observed" style="--top:20px;--w:44px;--a:10deg;--d:1.1s;left:80px"></i>
+        </div>
+        <div class="trace-key"><span class="pred">predicted</span><span>observed</span></div>
+      </div>
+
+      <span class="feedback-arc"></span>
+      <i class="feedback-seed seed-memory"></i><i class="feedback-seed seed-world"></i><i class="feedback-seed seed-value"></i><i class="feedback-seed seed-sleep"></i>
+      <span class="skill-stamp">new reusable skill</span>
+
+      <i class="flow-link link-perception-memory"></i><i class="flow-link link-perception-config"></i><i class="flow-link link-memory-config"></i><i class="flow-link link-config-search"></i><i class="flow-link link-search-action"></i><i class="flow-link link-action-reality"></i>
+    </div>
+
+    <figcaption class="episode-caption" data-flow-caption>Blood glucose, insulin, sleep, heart rate, and context arrive as one messy moment.</figcaption>
+    <p class="sr-only">A Type 1 diabetes example moves through Chamelia. Observations become a perceived state; memory and planning shape an action; the observed outcome returns to the system as learning.</p>
+    <p class="sr-only" aria-live="polite" aria-atomic="true" data-flow-live></p>
+
+    <ol class="episode-steps" aria-label="Episode stages">
+      <li><button class="episode-step" type="button" data-flow-jump="input">input</button></li>
+      <li><button class="episode-step" type="button" data-flow-jump="perception">perceive</button></li>
+      <li><button class="episode-step" type="button" data-flow-jump="memory">remember</button></li>
+      <li><button class="episode-step" type="button" data-flow-jump="configure">configure</button></li>
+      <li><button class="episode-step" type="button" data-flow-jump="search">search</button></li>
+      <li><button class="episode-step" type="button" data-flow-jump="action">act</button></li>
+      <li><button class="episode-step" type="button" data-flow-jump="reality">observe</button></li>
+      <li><button class="episode-step" type="button" data-flow-jump="feedback">learn</button></li>
+      <li><button class="episode-step" type="button" data-flow-jump="sleep">consolidate</button></li>
+    </ol>
+  </figure>
+
+  <details class="episode-transcript">
+    <summary>Read the episode as text</summary>
+    <ol>
+      <li>Blood glucose, insulin, sleep, heart rate, and context arrive as one moment.</li>
+      <li>Perception compresses those observations into a compact current state.</li>
+      <li>Memory retrieves similar episodes, beliefs, and reusable skills.</li>
+      <li>The configurator combines current state, relevant memory, goals, and constraints.</li>
+      <li>The actor proposes actions; the world model branches futures; constraints prune; cost scores; metacognition controls search.</li>
+      <li>The strongest candidate leaves search and becomes the chosen action.</li>
+      <li>Reality returns an observed outcome, which may differ from the prediction.</li>
+      <li>The outcome updates memory and learning signals; sleep later consolidates useful patterns.</li>
+    </ol>
+  </details>
+</section>
 
 <section class="origin" id="origin">
   <div class="origin-grid">
@@ -493,7 +573,7 @@ const io = new IntersectionObserver(entries => {
     if(e.isIntersecting){ e.target.classList.add('inview'); io.unobserve(e.target); }
   }
 }, {threshold:.2});
-document.querySelectorAll('.box, .mod, .step, .u, .arrows, .outputs').forEach(el => io.observe(el));
+document.querySelectorAll('.box, .mod, .u, .arrows, .outputs').forEach(el => io.observe(el));
 
 </script>
 </body></html>
