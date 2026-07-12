@@ -2,23 +2,22 @@
   const root = document.querySelector('[data-episode]');
   if (!root || root.dataset.mounted === 'true') return;
   root.dataset.mounted = 'true';
-  const forceMotion = ['localhost','127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).get('motion') === '1';
-  if (forceMotion) document.documentElement.classList.add('force-motion');
+  const forceMotion = true;
+  document.documentElement.classList.add('force-motion');
 
   const steps = [
-    {id:'raw-input', group:'input', duration:2400, short:'Life arrives', caption:'Blood glucose, insulin, sleep, heart rate, and context arrive as one messy moment.'},
-    {id:'perceive', group:'perception', duration:2300, short:'Perception', caption:'Perception circles the raw observations and compresses them into a compact current state.'},
-    {id:'retrieve', group:'memory', duration:2400, short:'Memory', caption:'Memory recognizes the shape of the moment and retrieves similar episodes, context, and beliefs.'},
-    {id:'configure', group:'configure', duration:2100, short:'Configure', caption:'The configurator joins the current state, relevant memory, goals, and constraints into one working brief.'},
-    {id:'propose', group:'search', duration:1750, short:'Propose', caption:'Inside MCTS, the actor proposes a few plausible actions.'},
-    {id:'simulate', group:'search', duration:2050, short:'Imagine', caption:'The world model grows a small tree of futures for those candidates.'},
-    {id:'score', group:'search', duration:1550, short:'Score', caption:'Cost annotates the branches while constraints identify what is not allowed.'},
-    {id:'prune', group:'search', duration:1600, short:'Search deeper', caption:'Metacognition spends more search where another look could change the answer.'},
-    {id:'choose', group:'action', duration:1500, short:'Choose', caption:'Search returns the best-supported root action; the other imagined branches fall back into pencil.'},
-    {id:'act', group:'action', duration:1300, short:'Act', caption:'The chosen action leaves the model and is implemented in the real world.'},
-    {id:'observe', group:'reality', duration:2300, short:'Reality answers', caption:'Reality answers. The observed glucose trace is compared with what the system expected.'},
-    {id:'learn', group:'feedback', duration:2100, short:'Learn', caption:'The outcome returns as an episode, prediction error, and reward or regret—not one generic flash.'},
-    {id:'consolidate', group:'sleep', duration:2100, short:'Consolidate', caption:'Sleep replays the episode and keeps the patterns and skills that earn a place.'}
+    {id:'raw-input', group:'input', duration:2600, short:'Life arrives', caption:'Blood glucose, insulin, sleep, heart rate, and context arrive as one messy moment.'},
+    {id:'perceive', group:'perception', duration:2900, short:'Perception', caption:'Perception circles those observations and compresses them into one current state, a.'},
+    {id:'retrieve', group:'memory', duration:2800, short:'Memory', caption:'State a queries memory; related episodes, beliefs, and reusable skills return as a small set of shapes.'},
+    {id:'configure', group:'configure', duration:2700, short:'Configure', caption:'State a and the retrieved memories converge in the configurator, alongside goals and constraints.'},
+    {id:'propose', group:'search', duration:2500, short:'Propose', caption:'The actor reaches into the action space and pulls out a few plausible candidates.'},
+    {id:'simulate', group:'search', duration:3000, short:'Imagine', caption:'The world model grows futures while metacognition sets how deeply to search under the available budget.'},
+    {id:'score', group:'search', duration:2400, short:'Score', caption:'Cost annotates each branch; constraints block what is not allowed.'},
+    {id:'choose', group:'action', duration:2200, short:'Choose', caption:'Among valid branches, candidate B has the lowest cost: 0.41. Search selects it.'},
+    {id:'act', group:'action', duration:2700, short:'Act', caption:'The selected action travels out of the search and into the person’s real situation.'},
+    {id:'observe', group:'reality', duration:2900, short:'Reality answers', caption:'Reality answers. The observed glucose trace is compared smoothly with what the system expected.'},
+    {id:'learn', group:'feedback', duration:2600, short:'Learn', caption:'The outcome returns as an episode, prediction error, and reward or regret—not one generic flash.'},
+    {id:'consolidate', group:'sleep', duration:2600, short:'Consolidate', caption:'Sleep replays the episode and keeps the patterns and skills that earn a place.'}
   ];
   const groupOrder = ['input','perception','memory','configure','search','action','reality','feedback','sleep'];
   const groupStart = Object.fromEntries(groupOrder.map(group => [group, steps.findIndex(step => step.group === group)]));
@@ -31,7 +30,7 @@
   const next = root.querySelector('[data-flow-next]');
   const markers = [...root.querySelectorAll('[data-flow-jump]')];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const isReduced = () => reduced.matches && !forceMotion;
+  const isReduced = () => false;
   let index = 0;
   let timer = 0;
   let dueAt = 0;
@@ -60,7 +59,14 @@
     root.dataset.state = step.id;
     root.dataset.group = step.group;
     steps.forEach((item, i) => root.classList.toggle(`has-visited-${item.id}`, i <= index));
+    const captionChanged = caption.textContent !== step.caption;
     caption.textContent = step.caption;
+    if (captionChanged && caption.animate) {
+      caption.animate([
+        {opacity:.25, transform:'translateY(7px)'},
+        {opacity:1, transform:'translateY(0)'}
+      ], {duration:620, easing:'cubic-bezier(.2,.72,.23,1)'});
+    }
     progress.textContent = `Step ${index + 1} of ${steps.length} · ${step.short}`;
     previous.disabled = index === 0;
     next.disabled = index === steps.length - 1;
@@ -150,11 +156,11 @@
   markers.forEach(button => button.addEventListener('click', () => jump(groupStart[button.dataset.flowJump])));
 
   const observer = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting && entry.intersectionRatio >= .45 && !autoplayed && !isReduced()) {
+    if (entry.isIntersecting && entry.intersectionRatio >= .18 && !autoplayed && !isReduced()) {
       autoplayed = true;
       play({restart:true});
     } else if (!entry.isIntersecting && playing) pause();
-  }, {threshold:[0,.2,.45]});
+  }, {threshold:[0,.18,.35]});
 
   reduced.addEventListener('change', () => {
     if (isReduced()) renderStatic();
@@ -168,5 +174,17 @@
   document.addEventListener('visibilitychange', () => { if (document.hidden && playing) pause(); });
 
   setStep(0);
-  if (isReduced()) renderStatic(); else observer.observe(root);
+  if (isReduced()) renderStatic();
+  else {
+    observer.observe(root);
+    requestAnimationFrame(() => {
+      if (autoplayed) return;
+      const rect = root.getBoundingClientRect();
+      const visible = Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0);
+      if (visible > Math.min(rect.height, innerHeight) * .18) {
+        autoplayed = true;
+        play({restart:true});
+      }
+    });
+  }
 })();
