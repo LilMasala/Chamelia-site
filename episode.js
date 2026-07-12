@@ -7,21 +7,22 @@
 
   const steps = [
     {id:'raw-input', group:'input', duration:2600, short:'Life arrives', caption:'Blood glucose, insulin, sleep, heart rate, and context arrive as one messy moment.'},
-    {id:'perceive', group:'perception', duration:3100, short:'Perception', caption:'The observations float into the eye and are absorbed. Only after digestion does one current state, a, appear.'},
-    {id:'retrieve', group:'memory', duration:2900, short:'Memory', caption:'State a queries memory; a similar morning, poor sleep, and exercise sensitivity return as labeled recalls.'},
-    {id:'configure', group:'configure', duration:2900, short:'Configure', caption:'State a enters from one side and the recalled context from the other. The configurator assembles them with goals and constraints.'},
+    {id:'perceive', group:'perception', duration:3100, short:'Perception', caption:'The observations float into the eye and are absorbed. Only after digestion does one compact state appear.'},
+    {id:'retrieve', group:'memory', duration:2900, short:'Memory', caption:'The compact state queries memory; a similar morning, poor sleep, and exercise sensitivity return as labeled recalls.'},
+    {id:'configure', group:'configure', duration:2900, short:'Configure', caption:'The compact state enters from one side and the recalled context from the other. The configurator assembles them with goals and constraints.'},
     {id:'propose', group:'search', duration:2800, short:'Propose', caption:'The actor draws three named candidates from its bag: adjust the basal window, change the carb ratio, or wait and monitor.'},
     {id:'simulate', group:'search', duration:3000, short:'Imagine', caption:'The world model grows futures while metacognition sets how deeply to search under the available budget.'},
     {id:'score', group:'search', duration:2400, short:'Score', caption:'Each candidate begins its own imagined path. Cost annotates the three resulting futures.'},
     {id:'choose', group:'action', duration:2400, short:'Choose', caption:'The two higher costs are crossed out. Adjusting the basal window has the lowest cost, 0.41, so search selects it.'},
     {id:'act', group:'action', duration:2700, short:'Act', caption:'The selected action travels out of the search and into the person’s real situation.'},
     {id:'observe', group:'reality', duration:2900, short:'Reality answers', caption:'Reality answers. The observed glucose trace is compared smoothly with what the system expected.'},
-    {id:'learn', group:'feedback', duration:2900, short:'Learn', caption:'The outcome sends one coordinated upgrade pulse through the architecture.'},
-    {id:'consolidate', group:'sleep', duration:2900, short:'Consolidate', caption:'Sleep replays what happened; the resulting reusable skill flows back into memory.'}
+    {id:'learn', group:'feedback', duration:4200, short:'Learn', caption:'The outcome sends one visible, coordinated update through the entire architecture.'},
+    {id:'consolidate', group:'sleep', duration:3400, short:'Consolidate', caption:'Sleep replays what happened; the resulting reusable skill returns all the way into memory.'}
   ];
   const groupOrder = ['input','perception','memory','configure','search','action','reality','feedback','sleep'];
   const groupStart = Object.fromEntries(groupOrder.map(group => [group, steps.findIndex(step => step.group === group)]));
   const caption = root.querySelector('[data-flow-caption]');
+  const stage = root.querySelector('.episode-stage');
   const progress = root.querySelector('[data-flow-progress]');
   const live = root.querySelector('[data-flow-live]');
   const toggle = root.querySelector('[data-flow-toggle]');
@@ -54,6 +55,7 @@
   }
 
   function setStep(nextIndex, {announce=false} = {}) {
+    const previousState = root.dataset.state;
     index = Math.max(0, Math.min(nextIndex, steps.length - 1));
     const step = steps[index];
     root.dataset.state = step.id;
@@ -63,9 +65,15 @@
     caption.textContent = step.caption;
     if (captionChanged && caption.animate) {
       caption.animate([
-        {opacity:.25, transform:'translateY(7px)'},
-        {opacity:1, transform:'translateY(0)'}
-      ], {duration:620, easing:'cubic-bezier(.2,.72,.23,1)'});
+        {opacity:.35},
+        {opacity:1}
+      ], {duration:850, easing:'cubic-bezier(.2,.72,.23,1)'});
+    }
+    if (previousState && previousState !== step.id && stage.animate) {
+      stage.animate([
+        {opacity:.94, filter:'saturate(.92)'},
+        {opacity:1, filter:'saturate(1)'}
+      ], {duration:900, easing:'cubic-bezier(.2,.72,.23,1)'});
     }
     progress.textContent = `Step ${index + 1} of ${steps.length} · ${step.short}`;
     previous.disabled = index === 0;
